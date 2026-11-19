@@ -10,8 +10,9 @@ const THEMES_SCRIPT := preload("res://scripts/themes.gd")
 const REACHABILITY := preload("res://scripts/reachability.gd")
 
 const ERROR_NOT_OBJECT := "not-object"
-## 认证闸拒载原因格式（push_error 含 unreachable-platform-<idx>）。
-const ERROR_UNREACHABLE := "unreachable-platform-%d"
+## 认证闸拒载原因格式（push_error 含 unreachable-<点身份>：
+## platform-<idx> / goal / checkpoint-<i>，与 certify.unreachable_point 同族）。
+const ERROR_UNREACHABLE := "unreachable-%s"
 const ERROR_MISSING_FIELD := "missing-field"
 const ERROR_BAD_TYPE := "bad-type"
 const ERROR_NEGATIVE_VALUE := "negative-value"
@@ -99,10 +100,10 @@ static func load_level(path: String) -> Dictionary:
 	if error != "":
 		return _fail_payload("关卡契约不合法（%s）：%s" % [error, path])
 	var level := normalize(data)
-	# 认证闸：不可达关卡当场拒载并报第一个够不到的平台序号。
+	# 认证闸：不可达关卡当场拒载并报第一个够不到的点身份（平台/终点旗/检查点）。
 	var cert: Dictionary = REACHABILITY.certify(level)
 	if not cert["ok"]:
-		return _fail_payload(ERROR_UNREACHABLE % int(cert["unreachable"]))
+		return _fail_payload(ERROR_UNREACHABLE % String(cert["unreachable_point"]))
 	level["id"] = path.get_file().get_basename()
 	return level
 

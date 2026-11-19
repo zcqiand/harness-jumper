@@ -1,11 +1,16 @@
 extends RefCounted
 ## 可达性判定器（认证第一闸）：加载时用关卡参数表驱动离散模拟，BFS 平台图
-## 断言「从出生点出发每个平台都可达」；不可达关卡当场拒载并报平台序号。
+## 断言「从出生点出发每个平台都可达」；第二段再断言 goal 与每个 checkpoint 都在
+## 某个可达平台顶面的触发半径内（悬空 goal/够不到的检查点=永不可通关，同样拒证）。
+## 不可达关卡当场拒载并报点身份（"platform-<i>" / "goal" / "checkpoint-<i>"）。
 ## 认证物理=玩家玩到的物理（spec 裁定 1）：只调 kinematics 同一积分模块，
 ## 勿在此另写积分。输入策略集={-1,0,1}（裁定 9：只验人类可直接执行的输入）。
 ## level 须已 normalize（platforms 每项 {x,y,w,h} float 字典）。
 
 const KINEMATICS := preload("res://scripts/kinematics.gd")
+## 触发半径真源在 game_view（TOUCH_RADIUS）：认证第二段引用同一常量，
+## 触发语义单源不分叉（认证的判定=玩家玩到的判定）。
+const GAME_VIEW := preload("res://scripts/game_view.gd")
 
 ## 模拟超时（游戏秒）：防悬空平台死循环模拟。
 const SIM_TIME_LIMIT := 3.0
@@ -18,8 +23,10 @@ const EDGE_SAMPLE_STEP := 24.0
 const STRATEGIES: Array[float] = [-1.0, 0.0, 1.0]
 
 
-## 认证：全平台可达 → {ok: true, unreachable: -1}；
-## 否则 {ok: false, unreachable: 按序第一个够不到的平台索引}。
+## 认证：全平台可达且 goal/全部 checkpoint 触发点可达
+## → {ok: true, unreachable: -1, unreachable_point: ""}；
+## 否则 {ok: false, unreachable: 按序第一个够不到的平台索引（触发点问题时不涉平台，为 -1）,
+## unreachable_point: 按序第一个够不到的点身份 "platform-<i>" / "goal" / "checkpoint-<i>"}。
 static func certify(level: Dictionary) -> Dictionary:
 	var platforms: Array = level["platforms"]
 	var spawn: Array = level["spawn"]
@@ -53,8 +60,42 @@ static func certify(level: Dictionary) -> Dictionary:
 			)
 	for i in platforms.size():
 		if not visited.has(i):
-			return {"ok": false, "unreachable": i}
-	return {"ok": true, "unreachable": -1}
+			return {"ok": false, "unreachable": i, "unreachable_point": "platform-%d" % i}
+	# 第二段：goal 与每个 checkpoint 须位于某个可达平台顶面的触发半径内
+	# （触发点够不到=能走到却永不可通关/永拿不到重生点，同样拒证）。
+	if not _point_reachable(level["goal"], platforms, visited):
+		return {"ok": false, "unreachable": -1, "unreachable_point": "goal"}
+	var checkpoints: Array = level["checkpoints"]
+	for i in checkpoints.size():
+		if not _point_reachable(checkpoints[i], platforms, visited):
+			return {"ok": false, "unreachable": -1, "unreachable_point": "checkpoint-%d" % i}
+	return {"ok": true, "unreachable": -1, "unreachable_point": ""}
+
+
+## 触发点（goal/checkpoint 的 [x, y]）可达性：该点须落在某个「可达」平台顶面的
+## 触发半径内。顶面 x 区间取 find_landing 同款撑脚余量
+## [px − PLAYER_HALF_W, px + w + PLAYER_HALF_W]（站在顶面上的脚底可达位），
+## 半径取 game_view.TOUCH_RADIUS 同一常量；距离=点到区间线段的最近距离。
+static func _point_reachable(point: Variant, platforms: Array, visited: Dictionary) -> bool:
+	if point == null:
+		return true
+	var gx: float = float(point[0])
+	var gy: float = float(point[1])
+	for i in platforms.size():
+		if not visited.has(i):
+			continue
+		var p: Dictionary = platforms[i]
+		var dx := 0.0
+		var x_min: float = float(p["x"]) - KINEMATICS.PLAYER_HALF_W
+		var x_max: float = float(p["x"]) + float(p["w"]) + KINEMATICS.PLAYER_HALF_W
+		if gx < x_min:
+			dx = x_min - gx
+		elif gx > x_max:
+			dx = gx - x_max
+		var dy: float = gy - float(p["y"])
+		if sqrt(dx * dx + dy * dy) <= GAME_VIEW.TOUCH_RADIUS:
+			return true
+	return false
 
 
 ## spawn 脚底所站平台索引（脚底=顶面且 x 在顶面区间内）；无 → -1（虚地面）。

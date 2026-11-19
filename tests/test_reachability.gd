@@ -44,13 +44,14 @@ func run(failures: Array[String]) -> void:
 	harness.assert_near(reachability.DEATH_MARGIN, 800.0, 0.0001, "DEATH_MARGIN pinned", failures)
 	harness.assert_near(reachability.EDGE_SAMPLE_STEP, 24.0, 0.0001, "EDGE_SAMPLE_STEP pinned", failures)
 
-	# 正例①：jump_001（文件直读 normalize 后）全平台可达
+	# 正例①：jump_001（文件直读 normalize 后）全平台可达，触发点也全可达
 	var file := FileAccess.open(LEVEL_PATH, FileAccess.READ)
 	var data: Dictionary = JSON.parse_string(file.get_as_text())
 	var jump_001: Dictionary = contract.normalize(data)
 	var cert: Dictionary = reachability.certify(jump_001)
 	harness.assert_eq(cert["ok"], true, "jump_001 certifies reachable", failures)
 	harness.assert_eq(cert["unreachable"], -1, "jump_001 unreachable=-1", failures)
+	harness.assert_eq(cert["unreachable_point"], "", "jump_001 reports no unreachable point", failures)
 
 	# 负例②：300px 高差不可达，报第一个够不到的平台序号
 	var bad_cert: Dictionary = reachability.certify(contract.normalize(UNREACHABLE_LEVEL))
@@ -70,10 +71,29 @@ func run(failures: Array[String]) -> void:
 	var rejected: Dictionary = contract.load_level(reject_path)
 	harness.assert_true(rejected.is_empty(), "unreachable level load_level -> {}", failures)
 	harness.assert_eq(
-		contract.ERROR_UNREACHABLE % 1, "unreachable-platform-1",
+		contract.ERROR_UNREACHABLE % "platform-1", "unreachable-platform-1",
 		"reject reason names platform index", failures,
 	)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(reject_path))
+
+	# 认证闸接线⑤（终审修复波次 Important #1）：平台全可达但 goal 悬空的变体
+	# load_level → {} 拒载，拒载文案随点身份同步报 unreachable-goal。
+	var goal_dangle: Dictionary = FALL_LEVEL.duplicate(true)
+	goal_dangle["goal"] = [600.0, 50.0]  # 距两平台顶面撑脚区间均远超触发半径
+	var goal_cert: Dictionary = reachability.certify(contract.normalize(goal_dangle))
+	harness.assert_eq(goal_cert["ok"], false, "dangling goal certifies not ok", failures)
+	harness.assert_eq(goal_cert["unreachable_point"], "goal", "dangling goal reported as goal", failures)
+	var goal_reject_path := "%s/t4-dangling-goal-fixture.json" % WORK_DIR
+	var goal_out := FileAccess.open(goal_reject_path, FileAccess.WRITE)
+	goal_out.store_string(JSON.stringify(goal_dangle))
+	goal_out.close()
+	var goal_rejected: Dictionary = contract.load_level(goal_reject_path)
+	harness.assert_true(goal_rejected.is_empty(), "dangling goal level load_level -> {}", failures)
+	harness.assert_eq(
+		contract.ERROR_UNREACHABLE % "goal", "unreachable-goal",
+		"reject reason syncs with point identity", failures,
+	)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(goal_reject_path))
 
 	# 顺手账（Task 2 留账）：合法契约 load_level 附 id（文件名去扩展名）
 	var loaded: Dictionary = contract.load_level(LEVEL_PATH)

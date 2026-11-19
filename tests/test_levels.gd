@@ -63,6 +63,32 @@ func run(failures: Array[String]) -> void:
 				failures,
 			)
 
+	# 认证第二段（终审修复波次 Important #1，红先）：goal/checkpoint 触发点可达性闸——
+	# 平台 BFS 全可达但 goal 悬在半空（不在任何可达平台顶面的触发半径内）的关卡，
+	# 修复前照样过闸拿 certified ✓ 却永不可通关；修复后 certify 拒证并报点身份。
+	var base_file := FileAccess.open("%s/jump_001.json" % LEVELS_DIR, FileAccess.READ)
+	harness.assert_true(base_file != null, "jump_001.json opens (gate variant base)", failures)
+	if base_file != null:
+		var base_data: Variant = JSON.parse_string(base_file.get_as_text())
+		if base_data is Dictionary:
+			var base: Dictionary = base_data
+			# goal 悬空变体：goal [300, 260] 距最近可达平台顶面（P1 顶 y=300，
+			# x 撑脚区间 [188, 332]）垂直 40px > 触发半径 24px → 不可触发。
+			var goal_dangling: Dictionary = base.duplicate(true)
+			goal_dangling["goal"] = [300.0, 260.0]
+			var goal_cert: Dictionary = contract.REACHABILITY.certify(contract.normalize(goal_dangling))
+			harness.assert_eq(goal_cert["ok"], false, "dangling goal fails certify gate", failures)
+			harness.assert_eq(goal_cert["unreachable_point"], "goal",
+				"dangling goal reported as goal", failures)
+			# checkpoint 悬空变体：cp1 [630, 470] 距地面顶面 y=400 垂直 70px > 半径
+			# （cp0 原位仍在 P1 顶面）→ 报 "checkpoint-1"。
+			var cp_dangling: Dictionary = base.duplicate(true)
+			cp_dangling["checkpoints"] = [[260.0, 300.0], [630.0, 470.0]]
+			var cp_cert: Dictionary = contract.REACHABILITY.certify(contract.normalize(cp_dangling))
+			harness.assert_eq(cp_cert["ok"], false, "dangling checkpoint fails certify gate", failures)
+			harness.assert_eq(cp_cert["unreachable_point"], "checkpoint-1",
+				"dangling checkpoint reported by index", failures)
+
 
 ## 单关门槛：契约合法 + 认证可达（读文件任一步失败记红不中断）。
 func _check_level(contract: GDScript, harness: GDScript, id: String, path: String, \
