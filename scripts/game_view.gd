@@ -24,9 +24,11 @@ const VIEW_H := 480.0
 const DT := KINEMATICS.DT
 ## 坠落底界：低于最低平台面再多留余量即判坠亡。
 const FALL_Y := 560.0
-## 检查点/终点旗触发半径（px）。
+## 检查点/终点旗触发半径（px）；reachability 认证第二段引用同一常量，触发语义单源。
 const TOUCH_RADIUS := 24.0
 const DUST_CAPACITY := 12
+## 尘土粒子可见寿命（tick 数）：落地借出可见，到期还池+隐身（终审 Important #2）。
+const DUST_TTL_TICKS := 12
 ## 未激活检查点标记的灰。
 const CP_INACTIVE_COLOR := Color(0.55, 0.55, 0.55, 0.9)
 
@@ -52,6 +54,8 @@ var _platform_nodes: Array[ColorRect] = []
 var _cp_markers: Array[ColorRect] = []
 var _dust_nodes: Array[ColorRect] = []
 var _dust_pool: Dictionary = {}
+## 借出中尘土的剩余 TTL（id → tick 数），到期还池+隐身。
+var _dust_ttl: Dictionary = {}
 var _hud_time: Label
 var _hud_deaths: Label
 
@@ -122,6 +126,7 @@ func tick(input_x: int, jump_pressed: bool) -> void:
 	_touch_goal()
 	if not _ended:
 		_check_fall()
+	_age_dust()
 	_sync_view()
 
 
@@ -145,6 +150,20 @@ func platform_node_count() -> int:
 
 func is_resting() -> bool:
 	return bool(_state.get("on_ground", false))
+
+
+## 可见尘土数（冒烟取数口：落地后 ≥1，TTL 过后归 0）。
+func dust_visible_count() -> int:
+	var count := 0
+	for dust in _dust_nodes:
+		if dust.visible:
+			count += 1
+	return count
+
+
+## 尘土池空闲数（冒烟取数口：TTL 过后全额归还回 DUST_CAPACITY）。
+func dust_pool_free_count() -> int:
+	return (_dust_pool["free"] as Array).size()
 
 
 ## ——场景搭建——
@@ -266,8 +285,12 @@ func _touch_checkpoints() -> void:
 		var point: Array = points[i]
 		var center := Vector2(float(point[0]), float(point[1]))
 		if center.distance_to(pos) <= TOUCH_RADIUS:
+			# 仅激活位真翻转才重着色 accent：乱序触发只计违例不激活
+			# （checkpoints.trigger 语义），误染会把未激活位画成已激活（终审 Minor）。
+			var was_activated: bool = bool(activated[i])
 			_cp_state = CHECKPOINTS.trigger(_cp_state, i)
-			_cp_markers[i].color = _palette["accent"]
+			if not was_activated and bool((_cp_state["activated"] as Array)[i]):
+				_cp_markers[i].color = _palette["accent"]
 
 
 func _touch_goal() -> void:
@@ -306,13 +329,30 @@ func _check_fall() -> void:
 	_air_peak = 0.0
 
 
-## 尘土：池借还（占位实现——同帧借还，brief Step 2；视觉细化随行）。
+## 尘土：池借还 + 短生命周期可见——借出置位可见并登记 TTL，到期由 _age_dust
+## 还池+隐身（release 幂等；池空静默丢弃本粒尘，尘土少一颗无感不值得排队）。
 func _spawn_dust(pos: Vector2) -> void:
 	var id := PARTICLES_POOL.acquire(_dust_pool)
 	if id < 0:
 		return
 	_dust_nodes[id].position = pos + Vector2(-3.0, 0.0)
-	PARTICLES_POOL.release(_dust_pool, id)
+	_dust_nodes[id].visible = true
+	_dust_ttl[id] = DUST_TTL_TICKS
+
+
+## 尘土逐帧老化：TTL 递减，到期隐身+还池（池借还逻辑复用，不重新实例化）。
+func _age_dust() -> void:
+	var expired: Array[int] = []
+	for id: int in _dust_ttl:
+		var left := int(_dust_ttl[id]) - 1
+		if left <= 0:
+			expired.append(id)
+		else:
+			_dust_ttl[id] = left
+	for id in expired:
+		_dust_ttl.erase(id)
+		_dust_nodes[id].visible = false
+		PARTICLES_POOL.release(_dust_pool, id)
 
 
 func _sync_view() -> void:
