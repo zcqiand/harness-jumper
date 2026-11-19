@@ -28,6 +28,11 @@ func _init() -> void:
 		print("[suite] %s — %d checks, %d failed" % [
 			path, harness.count, failures.size() - suite_failures,
 		])
+		if harness.count == 0:
+			# 套件记 0 checks=红不是绿：run() 中途脚本崩（如 load() 得 null 后
+			# 断言调用 SCRIPT ERROR 中止本套件）会留下 0 checks 0 failed 的
+			# 假绿形态；GDScript 无 try/catch，0-checks 哨兵覆盖该洞。
+			failures.append("suite %s recorded 0 checks (likely crashed mid-run)" % path)
 	if suites == 0:
 		# 零套件=红不是绿：发现环节打不开目录或一个 test_*.gd 都没匹配到时，
 		# 绝不能落进空 failures 的 ALL PASS 假绿（exit code 是唯一真相）。
