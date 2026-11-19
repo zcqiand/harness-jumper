@@ -7,8 +7,11 @@ extends RefCounted
 ## platforms 每项 {x, y, w, h}（float 字典），spawn/goal/checkpoints 是 [x, y] 数组。
 
 const THEMES_SCRIPT := preload("res://scripts/themes.gd")
+const REACHABILITY := preload("res://scripts/reachability.gd")
 
 const ERROR_NOT_OBJECT := "not-object"
+## 认证闸拒载原因格式（push_error 含 unreachable-platform-<idx>）。
+const ERROR_UNREACHABLE := "unreachable-platform-%d"
 const ERROR_MISSING_FIELD := "missing-field"
 const ERROR_BAD_TYPE := "bad-type"
 const ERROR_NEGATIVE_VALUE := "negative-value"
@@ -81,8 +84,9 @@ static func normalize(data: Dictionary) -> Dictionary:
 	return level
 
 
-## 读取并解析关卡契约文件（骨架同款 fail-fast）：任何一步失败
-## push_error 后返回空字典；合法时返回 normalize 后契约并附 "id"（文件名去扩展名）。
+## 读取并解析关卡契约文件（骨架同款 fail-fast）：任何一步失败（打不开/非 JSON
+## 对象/校验不过/可达性认证不过）push_error 后返回空字典；合法时返回 normalize
+## 后契约并附 "id"（文件名去扩展名）。
 static func load_level(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
@@ -95,6 +99,10 @@ static func load_level(path: String) -> Dictionary:
 	if error != "":
 		return _fail_payload("关卡契约不合法（%s）：%s" % [error, path])
 	var level := normalize(data)
+	# 认证闸：不可达关卡当场拒载并报第一个够不到的平台序号。
+	var cert: Dictionary = REACHABILITY.certify(level)
+	if not cert["ok"]:
+		return _fail_payload(ERROR_UNREACHABLE % int(cert["unreachable"]))
 	level["id"] = path.get_file().get_basename()
 	return level
 
