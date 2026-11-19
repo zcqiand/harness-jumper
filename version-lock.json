@@ -1,6 +1,14 @@
 {
   "note": "版本钉死 SSOT。Godot 版本按书 ch4 口径：安装实测后回填实测回执。",
   "version_lock": {
-    "godot": "4.x（ch4 安装实测后回填具体版号与安装回执路径）"
+    "godot": "4.7-stable (official.5b4e0cb0f)"
+  },
+  "install_receipt": {
+    "godot": {
+      "version_output": "4.7.stable.official.5b4e0cb0f",
+      "console_exe_path": "D:/qiand-life/3-resources/8-ego/software/godot/Godot_v4.7-stable_win64_console.exe",
+      "headless_test_command": "\"D:/qiand-life/3-resources/8-ego/software/godot/Godot_v4.7-stable_win64_console.exe\" --headless --path . --script res://tests/test_runner.gd",
+      "verified_on": "2026-11-19"
+    }
   }
 }
