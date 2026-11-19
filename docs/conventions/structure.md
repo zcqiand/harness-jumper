@@ -7,6 +7,16 @@ harness-jumper/
 ├── CLAUDE.md                       ← 工程约定入口
 ├── version-lock.json               ← 版本钉死 SSOT（Godot 版本）
 ├── project.godot                   ← Godot 工程描述（config_version=5）
+├── export_presets.cfg              ← Web 导出 preset（name 恰为 "Web"，Dockerfile 同名引用）
+├── icon.svg                        ← 工程图标（classic 主题配色，Web 导出消费）
+├── Dockerfile                      ← web-only 容器：Godot headless 导出 → nginx:alpine 静态
+├── nginx.conf                      ← 容器 nginx：静态服务+COOP/COEP（WASM 跨域隔离）
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  ← test（Godot headless runner）+ deploy（tag v* 触发）
+├── deploy/
+│   ├── harness-jumper.sh           ← VPS deploy 脚本（web-only 变体，5310/hjumper）
+│   └── nginx-vps.conf.example      ← vhost 模板（单 upstream+COOP/COEP 双保险）
 ├── scenes/
 │   └── main.tscn                   ← 主场景：三态路由根（选关/游戏/结算）
 ├── scripts/

@@ -46,3 +46,15 @@ exit code 是唯一真相：0=全绿（11 套件），非 0=按 FAIL 行修。
   （「classic 玩不了、moon 玩得了」的 showcase 承诺双向钉住）
 
 加关/改关跑一次 runner 即可：认证门槛套件自动扫到新关。
+
+## 部署
+
+tag push（`v*`）→ CI deploy job（agent 家族 web-only 变体，docs/families/agent.md 游戏段）：
+Godot headless 导出 Web 产物 → 单镜像 `zcqiand/harness-jumper-web`（latest+tag 双份）→
+VPS 拉镜像起容器（host 127.0.0.1:5310）→ `https://hjumper.xiangru.uk`。
+
+本地导出（产物落 `_work/`，gitignore）：
+
+```bash
+"D:/qiand-life/3-resources/8-ego/software/godot/Godot_v4.7-stable_win64_console.exe" --headless --path . --export-release "Web" _work/build-web/index.html
+```
