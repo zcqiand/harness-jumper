@@ -18,10 +18,12 @@ Godot 平台跳跃游戏：物理规约（重力/跳跃力/土狼时间写进可
 ## 验收
 
 ```bash
-godot --headless --path . --quit   # 工程可被 Godot 正常导入解析（ch4 Godot 装机后启用）
+"D:/qiand-life/3-resources/8-ego/software/godot/Godot_v4.7-stable_win64_console.exe" --headless --path . --script res://tests/test_runner.gd
 ```
 
-GDScript 侧断言脚本随 ch10 章节落。本机无 Godot 时，工程结构以 ch4 实测为准补验。
+headless 测试入口（`tests/test_runner.gd` 自动发现 `tests/test_*.gd`）：
+exit code 是唯一真相，0=全绿。加关/改关必跑——`test_levels.gd` 关卡集全认证
+（validate+certify）是关卡集的发布门槛。
 
 ## 正式区 / 临时区（2026-10-24 人定，全产品线通用）
 
