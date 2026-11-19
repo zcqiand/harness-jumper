@@ -1,7 +1,16 @@
 {
   "name": "sample-steps",
+  "theme": "classic",
   "gravity": 980.0,
   "jump_speed": -420.0,
+  "move_speed": 220,
+  "move_accel": 2400,
+  "spawn": [40, 400],
+  "goal": [590, 140],
+  "checkpoints": [
+    [260, 300],
+    [440, 220]
+  ],
   "platforms": [
     [0, 400, 640, 40],
     [200, 300, 120, 20],
