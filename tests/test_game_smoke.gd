@@ -47,3 +47,27 @@ func run(failures: Array[String]) -> void:
 		harness.assert_true(result["violations"] is Array, "violations is array", failures)
 
 	view.free()
+
+	# 乱序触检查点（跳过 cp1 直接触 cp2）→ finished.violations 含
+	# "checkpoint-out-of-order"（spec 裁定 4：乱序=成绩不认可，须进权威违例清单）。
+	var view2: Node2D = game_view_script.new()
+	view2.setup(level)
+	view2.player_state()["x"] = 440.0
+	view2.player_state()["y"] = 220.0
+	view2.tick(0, false)  # next=0 时触 cp2：计违例不激活
+	var waited := 0
+	while not view2.is_resting() and waited < 200:
+		view2.tick(0, false)  # 落回地面恢复静立
+		waited += 1
+	harness.assert_true(view2.is_resting(), "out-of-order runner lands back on floor", failures)
+	view2.player_state()["x"] = 590.0
+	view2.player_state()["y"] = 140.0
+	var results2: Array = []
+	view2.finished.connect(func(result: Dictionary) -> void: results2.append(result))
+	view2.tick(0, false)
+	harness.assert_eq(results2.size(), 1, "out-of-order run still reaches goal", failures)
+	if results2.size() == 1:
+		var violations2: Array = results2[0]["violations"]
+		harness.assert_true(violations2.has("checkpoint-out-of-order"),
+			"out-of-order checkpoint lands in finished violations", failures)
+	view2.free()

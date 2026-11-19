@@ -279,11 +279,17 @@ func _touch_goal() -> void:
 	if center.distance_to(Vector2(_state["x"], _state["y"])) > TOUCH_RADIUS:
 		return
 	_ended = true
+	# finished.violations = 本局认证唯一权威清单：双闸违例之外，检查点乱序计数
+	# （checkpoints.trigger 产出，spec 裁定 4 乱序=成绩不认可）一并折算成标签入表，
+	# 防 Task 8 只认 finished 时把乱序局干净入档。
+	var violations := _violations.duplicate()
+	if int(_cp_state["violations"]) > 0:
+		violations.append("checkpoint-out-of-order")
 	finished.emit({
 		"time_ms": int(_accumulated_dt * 1000.0),
 		"deaths": _deaths,
-		"violations": _violations.duplicate(),
-		"peaks_ok": not _violations.has("peak-exceeded"),
+		"violations": violations,
+		"peaks_ok": not violations.has("peak-exceeded"),
 	})
 
 
