@@ -31,8 +31,8 @@ harness-jumper/
 ├── tests/
 │   ├── harness.gd                  ← 断言工具（静态）：失败记 label 不中断，count 计数
 │   ├── test_runner.gd              ← headless 入口：自动发现 test_*.gd，exit code 唯一真相
-│   ├── test_smoke.gd               ← 冒烟：工程/关卡装载
-│   ├── test_asserts.gd             ← harness 自测
+│   ├── test_smoke.gd               ← 基建冒烟：runner 发现机制（true / 1.5）
+│   ├── test_asserts.gd             ← 运行时断言套件：峰值界+落点区间+违例收集
 │   ├── test_contract.gd            ← 契约层：校验枚举/normalize/themes
 │   ├── test_reachability.gd        ← 认证器：正例/负例/坠落边/拒载接线
 │   ├── test_kinematics.gd          ← 运动学：积分/峰值/落地

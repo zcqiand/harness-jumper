@@ -1,6 +1,6 @@
 # harness-jumper
 
-书《Harness 项目工程：Codex 智能游戏开发入门》（xr-know-022）配套仓——Godot 平台跳跃游戏。
+书《Harness 工程：Codex 智能游戏开发入门》（xr-know-022）配套仓——Godot 平台跳跃游戏。
 
 | 字段 | 值 |
 |------|------|

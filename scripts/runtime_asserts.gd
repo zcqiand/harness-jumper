@@ -5,6 +5,11 @@ extends RefCounted
 ##
 ## 双消费铁律同 kinematics：峰值界调 kinematics.peak_height、落点区间与
 ## find_landing 同款（±PLAYER_HALF_W 撑脚余量）——认证的物理=玩家玩到的物理。
+##
+## check_landing 现为单源语义下的同义反复：落点本就由 find_landing 以同一区间
+## 判定命中后才可能进 land 分支，正常运行路径上 check_landing 恒真——保留它是
+## 把落点区间当契约的显式面（语义在此可见、可测、可钉值），不承担额外防线
+## （终审 Minor 裁定：注释不改性）。
 
 const KINEMATICS := preload("res://scripts/kinematics.gd")
 
