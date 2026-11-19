@@ -4,6 +4,7 @@ extends RefCounted
 ##
 ## 读侧守卫纪律（家族同款）：坏档（JSON 解析失败/顶层非对象/缺 best 键/best 非字典）
 ## 一律回退空册 {"best": {}}，不抛错——坏档只丢历史成绩，不挡本局开玩。
+## 条目级坏形（best 内 value 非 Dictionary，如手改档 int）当缺失丢弃，档其余部分保留。
 ## record_result 纯：不改传入 book，duplicate 后改、返回新字典；只有更快才换
 ## PB 单槽，平局/更慢原样。写侧 save_book 失败随 storage 返回 false（静默降级）。
 ## storage 是鸭子接口（load_text/save_text 同签名即可），运行时注入 file_storage.gd
@@ -23,6 +24,14 @@ static func load_book(storage) -> Dictionary:
 	var book: Dictionary = parsed
 	if not (book.get("best", null) is Dictionary):
 		return {"best": {}}
+	# 条目级守卫（T6 挂账收口）：best 内 value 非 Dictionary（手改档 int 而非 dict）
+	# 当缺失丢弃——不丢弃会让 record_result 对 int 调 .get 崩。
+	var clean_best: Dictionary = {}
+	for level_id in book["best"] as Dictionary:
+		var entry: Variant = book["best"][level_id]
+		if entry is Dictionary:
+			clean_best[level_id] = entry
+	book["best"] = clean_best
 	return book
 
 

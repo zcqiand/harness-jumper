@@ -40,6 +40,7 @@ func run(failures: Array[String]) -> void:
 	_test_load_not_object(harness, scorebook, failures)
 	_test_load_best_not_dict(harness, scorebook, failures)
 	_test_load_missing_best_key(harness, scorebook, failures)
+	_test_load_bad_entry_dropped(harness, scorebook, failures)
 	_test_load_valid(harness, scorebook, failures)
 	_test_record_rejected(harness, scorebook, failures)
 	_test_record_new_level(harness, scorebook, failures)
@@ -90,6 +91,21 @@ func _test_load_missing_best_key(harness: GDScript, scorebook: GDScript, failure
 	storage.store[scorebook.SAVE_PATH] = '{"other": 1}'
 	var book: Dictionary = scorebook.load_book(storage)
 	harness.assert_eq(book, {"best": {}}, "缺 best 键 → 空册", failures)
+
+
+func _test_load_bad_entry_dropped(harness: GDScript, scorebook: GDScript, failures: Array[String]) -> void:
+	# 条目级坏形守卫（T6 挂账）：best 内 value 非 Dictionary（手改档 int 而非 dict）
+	# 当缺失丢弃——否则 record_result 对 int 调 .get 崩。
+	var storage: MemStorage = MemStorage.new()
+	storage.store[scorebook.SAVE_PATH] = '{"best": {"jump_001": 999}}'
+	var book: Dictionary = scorebook.load_book(storage)
+	harness.assert_eq(book, {"best": {}}, "best 条目非字典 → 条目丢弃", failures)
+	var recorded: Dictionary = scorebook.record_result(book, "jump_001", 1500, true)
+	harness.assert_eq(int(recorded["best"]["jump_001"]["time_ms"]), 1500, "坏条目丢弃后可正常入册", failures)
+	storage.store[scorebook.SAVE_PATH] = '{"best": {"jump_001": {"time_ms": 1200, "saved_at": "x"}, "jump_002": 42}}'
+	var mixed: Dictionary = scorebook.load_book(storage)
+	harness.assert_true(mixed["best"].has("jump_001"), "好坏混合档：好条目保留", failures)
+	harness.assert_true(not mixed["best"].has("jump_002"), "好坏混合档：坏条目丢弃", failures)
 
 
 func _test_load_valid(harness: GDScript, scorebook: GDScript, failures: Array[String]) -> void:
