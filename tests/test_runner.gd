@@ -28,6 +28,10 @@ func _init() -> void:
 		print("[suite] %s — %d checks, %d failed" % [
 			path, harness.count, failures.size() - suite_failures,
 		])
+	if suites == 0:
+		# 零套件=红不是绿：发现环节打不开目录或一个 test_*.gd 都没匹配到时，
+		# 绝不能落进空 failures 的 ALL PASS 假绿（exit code 是唯一真相）。
+		failures.append("no test suites discovered")
 	if failures.is_empty():
 		print("ALL PASS (%d suites, %d checks)" % [suites, checks])
 		quit(0)
