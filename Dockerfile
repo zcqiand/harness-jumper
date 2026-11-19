@@ -36,7 +36,9 @@ RUN wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERS
 # headless 导出自带资源导入环节，产物 = index.html/js/wasm/pck + audio worklet 等一整套。
 WORKDIR /project
 COPY . .
-RUN /godot/Godot_v${GODOT_VERSION}_linux.x86_64 --headless --path /project --export-release "Web" /project/build-web/index.html
+# Godot 导出不自建目标目录（首航 44464379591 指纹：Target folder does not exist）——先 mkdir
+RUN mkdir -p /project/build-web \
+  && /godot/Godot_v${GODOT_VERSION}_linux.x86_64 --headless --path /project --export-release "Web" /project/build-web/index.html
 
 # ---------- Stage 2: runtime ----------
 FROM nginx:alpine AS runtime
