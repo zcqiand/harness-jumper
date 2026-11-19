@@ -10,6 +10,13 @@ run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.svg"
 config/features=PackedStringArray("4.7")
 
+[gui]
+
+; Web 导出无系统字体回退（桌面版中文回退系统字体，web 端只有豆腐块）——
+; 捆绑 Noto Sans SC 子集字体（按仓内全部源文件用字子集化，16.4MB→360KB），
+; 设为默认主题字体；后续新增文案用到新字须重跑子集化（脚本在 _work/fontfix/，git-ignore 批次件）。
+theme/custom_font="res://fonts/noto_sc_subset.otf"
+
 [display]
 
 window/size/viewport_width=640
