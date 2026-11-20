@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "suite_version": "0.6.0",
+  "project": "harness-jumper",
+  "stack": "generic",
+  "gates": {
+    "L4": {
+      "name": "测试（Godot 4.7 headless 全量，11 套件 219 checks）",
+      "cmd": [
+        "D:/qiand-life/3-resources/8-ego/software/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--script",
+        "res://tests/test_runner.gd"
+      ],
+      "fix": "先让 test_runner.gd 打出 ALL PASS（exit code 唯一真相 + ALL PASS 双断言，CI 同款）。测试零依赖、不需导出模板。改测试前必须先说明理由；动 kinematics/reachability 后另跑认证回归（认证的物理=玩家玩到的物理，禁两边各写一份积分）。"
+    }
+  },
+  "trace_cmd": [],
+  "trace_env": {},
+  "source_dirs": [
+    "scripts"
+  ],
+  "test_dirs": [
+    "tests"
+  ]
+}

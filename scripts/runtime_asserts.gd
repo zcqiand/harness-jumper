@@ -35,5 +35,6 @@ static func check_landing(land_x: float, platform: Dictionary) -> bool:
 
 ## 违例表收集器：每次本局断言检查开一个新空表，调用方按违例 append 标签，
 ## 结算面按表非空拒绝成绩入档。
+# @impl M04.F02.I02
 static func new_violations() -> Array[String]:
 	return []

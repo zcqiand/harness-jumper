@@ -55,6 +55,10 @@ func setup(storage, levels_dir: String = DEFAULT_LEVELS_DIR) -> void:
 
 
 ## 合法关卡卡数（冒烟断言口）。
+# @entry M01.F01.I01
+# @entry M01.F01.I02
+# @entry M01.F01.I03
+# @entry M01.F02.I01
 func card_count() -> int:
 	return _valid_levels.size()
 

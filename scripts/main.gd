@@ -47,6 +47,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## ——状态迁移——
+# @impl M02.F04.I01
+# @entry M02.F04.I02
 
 func _show_select() -> void:
 	_screen = Screen.SELECT

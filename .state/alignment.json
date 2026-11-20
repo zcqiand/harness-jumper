@@ -1,0 +1,353 @@
+{
+  "schema": 1,
+  "project": "harness-jumper",
+  "functions": {
+    "modules": 4,
+    "features": 11,
+    "items": 24
+  },
+  "warnings_total": 72,
+  "warnings": {
+    "已上线但无设计映射": [
+      "M01.F01.I01",
+      "M01.F01.I02",
+      "M01.F01.I03",
+      "M01.F02.I01",
+      "M02.F01.I01",
+      "M02.F02.I01",
+      "M02.F02.I02",
+      "M02.F02.I03",
+      "M02.F03.I01",
+      "M02.F03.I02",
+      "M02.F04.I01",
+      "M02.F04.I02",
+      "M02.F04.I03",
+      "M03.F01.I01",
+      "M03.F01.I02",
+      "M03.F01.I03",
+      "M03.F02.I01",
+      "M03.F02.I02",
+      "M03.F02.I03",
+      "M04.F01.I01",
+      "M04.F01.I02",
+      "M04.F02.I01",
+      "M04.F02.I02",
+      "M04.F03.I01"
+    ],
+    "已上线但无测试引用": [
+      "M01.F01.I01",
+      "M01.F01.I02",
+      "M01.F01.I03",
+      "M01.F02.I01",
+      "M02.F01.I01",
+      "M02.F02.I01",
+      "M02.F02.I02",
+      "M02.F02.I03",
+      "M02.F03.I01",
+      "M02.F03.I02",
+      "M02.F04.I01",
+      "M02.F04.I02",
+      "M02.F04.I03",
+      "M03.F01.I01",
+      "M03.F01.I02",
+      "M03.F01.I03",
+      "M03.F02.I01",
+      "M03.F02.I02",
+      "M03.F02.I03",
+      "M04.F01.I01",
+      "M04.F01.I02",
+      "M04.F02.I01",
+      "M04.F02.I02",
+      "M04.F03.I01"
+    ],
+    "已上线但不在任何流程且非孤儿白名单": [
+      "M01.F01.I01",
+      "M01.F01.I02",
+      "M01.F01.I03",
+      "M01.F02.I01",
+      "M02.F01.I01",
+      "M02.F02.I01",
+      "M02.F02.I02",
+      "M02.F02.I03",
+      "M02.F03.I01",
+      "M02.F03.I02",
+      "M02.F04.I01",
+      "M02.F04.I02",
+      "M02.F04.I03",
+      "M03.F01.I01",
+      "M03.F01.I02",
+      "M03.F01.I03",
+      "M03.F02.I01",
+      "M03.F02.I02",
+      "M03.F02.I03",
+      "M04.F01.I01",
+      "M04.F01.I02",
+      "M04.F02.I01",
+      "M04.F02.I02",
+      "M04.F03.I01"
+    ]
+  },
+  "unreachable_shipped": [],
+  "function_map": {
+    "M01.F01.I01": {
+      "name": "选关屏与认证出卡",
+      "status": "已上线",
+      "type": "页面",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/select_view.gd"
+      ]
+    },
+    "M01.F01.I02": {
+      "name": "拒载关卡红字报因",
+      "status": "已上线",
+      "type": "报表",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/select_view.gd"
+      ]
+    },
+    "M01.F01.I03": {
+      "name": "点击卡片进图",
+      "status": "已上线",
+      "type": "按钮",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/select_view.gd"
+      ]
+    },
+    "M01.F02.I01": {
+      "name": "选关卡 PB 时间读取",
+      "status": "已上线",
+      "type": "查询",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/select_view.gd"
+      ]
+    },
+    "M02.F01.I01": {
+      "name": "游戏屏页面",
+      "status": "已上线",
+      "type": "页面",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/game_view.gd"
+      ]
+    },
+    "M02.F02.I01": {
+      "name": "运动学纯函数模块",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F02.I02": {
+      "name": "输入轴与跳跃沿",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F02.I03": {
+      "name": "落地判定与尘土粒子",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F03.I01": {
+      "name": "检查点按序状态机",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F03.I02": {
+      "name": "坠落出界重生",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F04.I01": {
+      "name": "finished 接收与成绩落账",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M02.F04.I02": {
+      "name": "Esc 放弃回选关",
+      "status": "已上线",
+      "type": "按钮",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/main.gd"
+      ]
+    },
+    "M02.F04.I03": {
+      "name": "触 goal 通关广播",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M03.F01.I01": {
+      "name": "结算屏页面",
+      "status": "已上线",
+      "type": "页面",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/result_view.gd"
+      ]
+    },
+    "M03.F01.I02": {
+      "name": "认证徽章与违例红字",
+      "status": "已上线",
+      "type": "报表",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/result_view.gd"
+      ]
+    },
+    "M03.F01.I03": {
+      "name": "再战与回选关按钮",
+      "status": "已上线",
+      "type": "按钮",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/result_view.gd"
+      ]
+    },
+    "M03.F02.I01": {
+      "name": "PB 单槽落账",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M03.F02.I02": {
+      "name": "新纪录判定高亮",
+      "status": "已上线",
+      "type": "报表",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": [
+        "scripts/result_view.gd"
+      ]
+    },
+    "M03.F02.I03": {
+      "name": "本地持久档读写",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F01.I01": {
+      "name": "关卡契约校验与归一",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F01.I02": {
+      "name": "主题色板真源",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F02.I01": {
+      "name": "可达性判定器",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F02.I02": {
+      "name": "运行时断言",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F03.I01": {
+      "name": "尘土粒子池借还",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    }
+  }
+}

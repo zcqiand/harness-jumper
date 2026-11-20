@@ -54,5 +54,6 @@ static func record_result(book: Dictionary, level_id: String, time_ms: int, asse
 
 
 ## 写册：JSON 序列化后交 storage.save_text；写失败（含打不开文件）透传 false。
+# @impl M03.F02.I01
 static func save_book(book: Dictionary, storage) -> bool:
 	return storage.save_text(SAVE_PATH, JSON.stringify(book))

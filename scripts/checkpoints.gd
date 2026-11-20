@@ -32,6 +32,7 @@ static func trigger(state: Dictionary, index: int) -> Dictionary:
 
 ## 坠落重生点：按激活顺序最新的检查点坐标（时序语义，非空间最近——
 ## 按序激活下最新激活位即进度最远者）；无任何激活 → spawn。
+# @impl M02.F03.I01
 static func respawn_point(state: Dictionary, points: Array, spawn: Vector2) -> Vector2:
 	var activated: Array = state["activated"]
 	var latest := -1

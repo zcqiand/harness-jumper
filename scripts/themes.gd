@@ -26,5 +26,6 @@ const THEMES := {
 
 
 ## 取主题色板；未知 theme 返回 classic 色板（不抛错，渲染层兜底）。
+# @impl M04.F01.I02
 static func palette(theme: String) -> Dictionary:
 	return THEMES.get(theme, THEMES["classic"])

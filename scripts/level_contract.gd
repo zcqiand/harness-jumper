@@ -58,6 +58,7 @@ static func validate(data: Dictionary) -> String:
 ## 缺省补全 + 形状归一（不改传入字典，返回新字典）：
 ## move_speed=220.0 / move_accel=2400.0 / theme="classic" / spawn=[40.0, 400.0] /
 ## goal=null / checkpoints=[]；platforms 四元组数组转 {x, y, w, h} float 字典数组。
+# @impl M04.F01.I01
 static func normalize(data: Dictionary) -> Dictionary:
 	var level := data.duplicate(true)
 	if not level.has("move_speed"):

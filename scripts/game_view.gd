@@ -55,6 +55,11 @@ var _cp_markers: Array[ColorRect] = []
 var _dust_nodes: Array[ColorRect] = []
 var _dust_pool: Dictionary = {}
 ## 借出中尘土的剩余 TTL（id → tick 数），到期还池+隐身。
+# @entry M02.F01.I01
+# @impl M02.F02.I02
+# @impl M02.F02.I03
+# @impl M02.F03.I02
+# @impl M02.F04.I03
 var _dust_ttl: Dictionary = {}
 var _hud_time: Label
 var _hud_deaths: Label

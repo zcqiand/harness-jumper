@@ -56,6 +56,7 @@ static func step(state: Dictionary, params: Dictionary, input_x: float, dt: floa
 ## 落地判定：下落中（prev.vy>0）且脚底跨过平台顶面（prev.y ≤ top < curr.y）
 ## 且 curr.x ∈ [px - PLAYER_HALF_W, px + w + PLAYER_HALF_W]（撑脚余量）
 ## → {platform: 索引, land_x: curr.x, land_y: top}；否则 {}。
+# @impl M02.F02.I01
 static func find_landing(prev: Dictionary, curr: Dictionary, platforms: Array) -> Dictionary:
 	if prev["vy"] <= 0.0:
 		return {}

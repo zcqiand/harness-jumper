@@ -25,5 +25,6 @@ func save_text(path: String, text: String) -> bool:
 
 
 ## 存在性：存在 → true。
+# @impl M03.F02.I03
 func exists(path: String) -> bool:
 	return FileAccess.file_exists(path)

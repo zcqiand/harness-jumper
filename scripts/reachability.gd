@@ -27,6 +27,7 @@ const STRATEGIES: Array[float] = [-1.0, 0.0, 1.0]
 ## → {ok: true, unreachable: -1, unreachable_point: ""}；
 ## 否则 {ok: false, unreachable: 按序第一个够不到的平台索引（触发点问题时不涉平台，为 -1）,
 ## unreachable_point: 按序第一个够不到的点身份 "platform-<i>" / "goal" / "checkpoint-<i>"}。
+# @impl M04.F02.I01
 static func certify(level: Dictionary) -> Dictionary:
 	var platforms: Array = level["platforms"]
 	var spawn: Array = level["spawn"]

@@ -26,6 +26,7 @@ static func acquire(pool: Dictionary) -> int:
 
 
 ## 还一颗：仅登记在借出册的 id 回队（双释放/未知 id 幂等跳过）。
+# @impl M04.F03.I01
 static func release(pool: Dictionary, id: int) -> void:
 	var in_use: Dictionary = pool["in_use"]
 	if not in_use.has(id):

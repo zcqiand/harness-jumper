@@ -54,6 +54,10 @@ func texts() -> Array[String]:
 
 
 ## ——内部——
+# @entry M03.F01.I01
+# @entry M03.F01.I02
+# @entry M03.F01.I03
+# @entry M03.F02.I02
 
 func _label(pos: Vector2, text: String, font_size: int, color: Color) -> Label:
 	var label := Label.new()
