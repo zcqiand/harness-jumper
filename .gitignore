@@ -6,3 +6,6 @@ _work/
 .env.*
 .godot/
 build-web/
+
+# suite 门禁运行产物
+.state/
